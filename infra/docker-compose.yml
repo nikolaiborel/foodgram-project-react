@@ -13,7 +13,7 @@ services:
       - 5432:5432
 
   backend:
-    image: nikolaiborel/backend:latest
+    image: nikolaiborel/foodgram-backend:latest
     restart: always
     depends_on:
       - db
@@ -24,7 +24,7 @@ services:
       - ../backend/foodgram_project/.env
 
   frontend:
-    image: nikolaiborel/frontend:latest
+    image: nikolaiborel/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
