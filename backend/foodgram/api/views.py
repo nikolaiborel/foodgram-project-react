@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, filters
 
 from recipes.models import (Ingredient, Recipes,
                             Tag, Favorite,
@@ -23,16 +23,19 @@ from .filters import IngredientFilter, RecipesFilter
 
 
 class IngredientsViewSet(ModelViewSet):
+    pagination_class = None
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
 
 
+
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
+    pagination_class = None
 
 
 class RecipesViewSet(ModelViewSet):
@@ -60,7 +63,7 @@ class RecipesViewSet(ModelViewSet):
         if request.method == 'POST':
             return self.add_to(Favorite, request.user, pk)
         else:
-            return self.delete_from(Carts, request.user, pk)
+            return self.delete_from(Favorite, request.user, pk)
 
     @action(
         detail=True,
@@ -97,23 +100,25 @@ class RecipesViewSet(ModelViewSet):
         url_path='download_shopping_cart',
         permission_classes=[IsAuthenticated, ]
     )
-    def download_cart(self, request):
+    def download_shopping_cart(self, request):
         user = request.user
         if not user.in_carts.exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         ingredients = AmountIngredientsInRecipes.objects.filter(
-            recipe__in_carts=request.user
+            recipe__in_carts__user=request.user
         ).values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
         today = datetime.today()
-        shopping_list = (f'Список покупок для {user.get_full_name()} \n\n',
-                         f'data: {today: %Y-%m-%d} \n\n')
+        shopping_list = (
+            f'Список покупок для {user.get_full_name()}\n\n'
+            f'Дата: {today:%Y-%m-%d}\n\n'
+        )
         shopping_list += '\n'.join([
-            f'{ingredient["ingredient__name"]}'
+            f'- {ingredient["ingredient__name"]} '
             f'({ingredient["ingredient__measurement_unit"]})'
-            f'{ingredient["amount"]}'
+            f'- {ingredient["amount"]}'
             for ingredient in ingredients
         ])
         shopping_list += f'\n\n foodgram({today: %Y})'

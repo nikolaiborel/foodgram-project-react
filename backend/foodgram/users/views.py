@@ -20,7 +20,7 @@ class Authorization(ObtainAuthToken):
         serializer = AuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        token = Token.objects.get_or_create(user=user)
+        token, created = Token.objects.get_or_create(user=user)
         return Response({'auth_token': str(token)}, status=status.HTTP_200_OK)
 
 

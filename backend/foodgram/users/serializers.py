@@ -65,16 +65,16 @@ class FollowList(serializers.ModelSerializer):
     '''Список подписчиков'''
     recipes = RecipeShortSerializer(many=True, read_only=True)
     recipes_count = serializers.SerializerMethodField()
-    is_subscribe = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'is_subscribe', 'recipes', 'recipes_count')
+        fields = ('first_name', 'last_name', 'email', 'is_subscribed', 'recipes', 'recipes_count', 'id')
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
 
-    def get_is_subscribe(self, user):
+    def get_is_subscribed(self, user):
         request = self.context.get('REQUEST')
         if not request or request.user.is_anonymous:
             return False

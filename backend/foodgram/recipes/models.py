@@ -13,12 +13,18 @@ class Ingredient(models.Model):
     )
     measurement_unit = models.CharField(
         max_length=200,
-        verbose_name='Единица измерения'
+        verbose_name='Единица измерения',
     )
 
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        ordering = ['name']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='unique_name_measurement_unit')
+        ]
 
     def __str__(self):
         return f'name: {self.name}, {self.measurement_unit}'
@@ -66,6 +72,7 @@ class Recipes(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
+        through='AmountIngredientsInRecipes',
         verbose_name='Ингредиенты рецепта',
         related_name='ingredients',
     )
@@ -103,7 +110,8 @@ class AmountIngredientsInRecipes(models.Model):
     recipe = models.ForeignKey(
         Recipes,
         verbose_name='рецепт',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='ingredients_list'
     )
     ingredient = models.ForeignKey(
         Ingredient,
@@ -114,6 +122,10 @@ class AmountIngredientsInRecipes(models.Model):
         verbose_name='количество',
         validators=[MinValueValidator(1, message='Минимальное значение 1!')]
     )
+
+    class Meta:
+        verbose_name = 'Ингредиент в рецепте'
+        verbose_name_plural = 'Ингредиенты в рецептах'
 
     def __str__(self):
         return f'name: {self.ingredient.name},' \

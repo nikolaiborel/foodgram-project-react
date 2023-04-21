@@ -29,7 +29,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'djoser',
     'api',
     'users',
-    'recipes'
+    'recipes',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -166,6 +170,28 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
         'user': ['rest_framework.permissions.AllowAny']
     },
+
+    'SEARCH_PARAM': 'name',
     'HIDE_USERS': False,
     'USER_ID_FIELD': 'id',
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'rest_framework': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
 }

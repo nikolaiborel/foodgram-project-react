@@ -9,7 +9,7 @@ from rest_framework.serializers import ModelSerializer
 from drf_extra_fields.fields import Base64ImageField
 from django.db.models import F
 from recipes.models import Ingredient, Tag, Recipes, AmountIngredientsInRecipes
-
+import logging
 
 User = get_user_model()
 
@@ -95,8 +95,9 @@ class WriteRecipeSerializer(ModelSerializer):
             'author'
         )
 
-    def validate_ingredients(self, obj):
-        ingredients = obj
+    def validate(self, data):
+        ingredients = data['ingredients']
+        tags = data['tags']
         if not ingredients:
             raise ValidationError({
                 'ingredients': 'Укажите минимум 1 ингредиент'
@@ -113,10 +114,6 @@ class WriteRecipeSerializer(ModelSerializer):
                     'amount': 'Количество должно быть больше 0'
                 })
             ingredients_list.append(ingredient)
-        return obj
-
-    def validate_tags(self, obj):
-        tags = obj
         if not tags:
             raise ValidationError({'tags': 'Укажите минимум один тег'})
         tags_list = []
@@ -124,7 +121,7 @@ class WriteRecipeSerializer(ModelSerializer):
             if tag in tags_list:
                 raise ValidationError({'tags': 'Теги должны быть уникальными'})
             tags_list.append(tag)
-        return obj
+        return data
 
     @transaction.atomic
     def create_ingredients_amount(self, ingredients, recipes):
@@ -158,7 +155,7 @@ class WriteRecipeSerializer(ModelSerializer):
             recipes=instance,
             ingredients=ingredients
         )
-        instance.save()
+        super().update(instance, validated_data)
         return instance
 
     def to_representation(self, instance):
