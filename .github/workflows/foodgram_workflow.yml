@@ -44,6 +44,7 @@ jobs:
           context: ./backend
           push: true
           tags: nikolaiborel/foodgram-backend:latest
+
   build_frontend:
     name: Push Docker frontend image to Docker Hub
     runs-on: ubuntu-latest
