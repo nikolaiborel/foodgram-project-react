@@ -36,13 +36,13 @@ class ReadRecipesSerializer(ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
     image = Base64ImageField()
     author = UserSerializer(read_only=True)
-    is_favorite = SerializerMethodField(read_only=True)
+    is_favorited = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
 
     class Meta:
         model = Recipes
         fields = ('id', 'tags', 'author', 'ingredients',
-                  'is_favorite', 'is_in_shopping_cart',
+                  'is_favorited', 'is_in_shopping_cart',
                   'name', 'image', 'text', 'cooking_time')
 
     def get_ingredients(self, obj):
@@ -54,7 +54,7 @@ class ReadRecipesSerializer(ModelSerializer):
         )
         return ingredients
 
-    def get_is_favorite(self, obj):
+    def get_is_favorited(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
