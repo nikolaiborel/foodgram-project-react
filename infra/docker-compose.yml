@@ -8,7 +8,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     restart: always
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
     ports:
       - 5432:5432
 
@@ -21,7 +21,7 @@ services:
       - static_value:/code/static/
       - media_value:/code/media/
     env_file:
-      - ../backend/foodgram_project/.env
+      - ./.env
 
   frontend:
     image: nikolaiborel/foodgram-frontend:latest
