@@ -1,14 +1,18 @@
 import csv
 import os
-
+import django
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram.settings')
+django.setup()
+# settings.configure(AUTH_USER_MODEL='users.UserFoodgram')
 
-from backend.foodgram.recipes.models import Ingredient
+from recipes.models import Ingredient
 
 DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
-
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram.settings')
+# settings.configure(AUTH_USER_MODEL='users.UserFoodgram')
 
 
 class Command(BaseCommand):
@@ -28,6 +32,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
+        print('1233')
         try:
             with open(os.path.join(DATA_ROOT, options['filename']), 'r',
                       encoding='utf-8') as f:
