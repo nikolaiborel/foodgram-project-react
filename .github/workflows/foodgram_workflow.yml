@@ -86,7 +86,6 @@ jobs:
         script: |
           sudo docker compose stop
           sudo docker compose rm backend
-          cd ../backend/foodgram
           rm -f .env        
           touch .env
           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
