@@ -1,5 +1,5 @@
 version: '3.3'
-
+ 
 services:
   db:
     image: postgres:14.0
@@ -18,8 +18,8 @@ services:
     depends_on:
       - db
     volumes:
-      - static_value:/code/static/
-      - media_value:/code/media/
+      - static_value:/app/static/
+      - media_value:/app/media/
     env_file:
       - ./.env
 
