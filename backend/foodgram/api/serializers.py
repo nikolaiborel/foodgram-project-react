@@ -9,7 +9,6 @@ from rest_framework.serializers import ModelSerializer
 from drf_extra_fields.fields import Base64ImageField
 from django.db.models import F
 from recipes.models import Ingredient, Tag, Recipes, AmountIngredientsInRecipes
-import logging
 
 User = get_user_model()
 
