@@ -1,5 +1,5 @@
 version: '3.3'
- 
+
 services:
   db:
     image: postgres:14.0
@@ -27,8 +27,6 @@ services:
     image: nikolaiborel/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
-    depends_on:
-      - db
 
   nginx:
     image: nginx:1.19.3
@@ -45,7 +43,6 @@ services:
     restart: always
     depends_on:
       - backend
-      - frontend
 
 volumes:
   postgres_data:
