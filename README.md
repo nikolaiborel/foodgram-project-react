@@ -1,3 +1,7 @@
+http://84.201.149.231/
+login: admin@mail.ru
+pass: trewq123
+
 # Foodgram
 ## продуктовый помощник
 
@@ -40,3 +44,5 @@ git clone https://github.com/nikolaiborel/foodgram-project-react.git
 
 ### Автор
 Борель Николай
+
+
