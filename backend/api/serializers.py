@@ -8,6 +8,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 from drf_extra_fields.fields import Base64ImageField
 from django.db.models import F
+
 from recipes.models import Ingredient, Tag, Recipes, AmountIngredientsInRecipes
 
 User = get_user_model()
@@ -16,7 +17,9 @@ User = get_user_model()
 class UserSerializerCre(UserCreateSerializer):
     class Meta:
         model = User
-        fields = tuple(User.REQUIRED_FIELDS)+(User.USERNAME_FIELD, 'password')
+        fields = tuple(
+            User.REQUIRED_FIELDS) + (User.USERNAME_FIELD, 'password'
+                                     )
 
 
 class IngredientSerializer(ModelSerializer):

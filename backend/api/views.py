@@ -30,7 +30,6 @@ class IngredientsViewSet(ModelViewSet):
     filterset_class = IngredientFilter
 
 
-
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer

@@ -11,9 +11,6 @@ User = get_user_model()
 
 
 class UserRegistrationSerializer(UserCreateSerializer):
-    """
-    Сериалзиатор регистрации пользователей (используется в сеттингс)
-    """
     class Meta(UserCreateSerializer.Meta):
         fields = (
             'email',
@@ -25,9 +22,6 @@ class UserRegistrationSerializer(UserCreateSerializer):
 
 
 class UserSerializerCustom(UserSerializer):
-    """
-    Кастомный пользовательский сериализатор
-    """
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
@@ -53,23 +47,27 @@ class UserSerializerCustom(UserSerializer):
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
-    """
-    Мини-сериализатор рецептов
-    """
     class Meta:
         model = Recipes
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FollowList(serializers.ModelSerializer):
-    '''Список подписчиков'''
     recipes = RecipeShortSerializer(many=True, read_only=True)
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'is_subscribed', 'recipes', 'recipes_count', 'id')
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+            'id'
+        )
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
@@ -78,23 +76,35 @@ class FollowList(serializers.ModelSerializer):
         request = self.context.get('REQUEST')
         if not request or request.user.is_anonymous:
             return False
-        return Subscribe.objects.filters(user=user, author=request.user).exists()
+        return Subscribe.objects.filters(
+            user=user, author=request.user
+        ).exists()
 
 
 class AuthSerializer(serializers.Serializer):
-    '''Сериализатор аутентификации'''
     email = serializers.EmailField(label='Email')
-    password = serializers.CharField(label=('Password',), style={'input_type': 'password'})
+    password = serializers.CharField(
+        label=('Password',), style={'input_type': 'password'}
+    )
 
     def validate(self, atr):
         email = atr.get('email')
         password = atr.get('password')
         if email and password:
-            user = authenticate(request=self.context.get('request'), email=email, password=password)
+            user = authenticate(
+                request=self.context.get('request'),
+                email=email,
+                password=password
+            )
             if not user:
-                raise serializers.ValidationError('Неверные данные', code='authorization')
+                raise serializers.ValidationError(
+                    'Неверные данные', code='authorization'
+                )
         else:
-            raise serializers.ValidationError('Все поля должны быть заполнены', code='authorization')
+            raise serializers.ValidationError(
+                'Все поля должны быть заполнены',
+                code='authorization'
+            )
         atr['user'] = user
         return atr
 
@@ -118,7 +128,7 @@ class FollowSerializer(serializers.ModelSerializer):
     @action(detail=True, methods=['POST'])
     def check_follow_myself(self, data):
         if data['user'] == data['follow']:
-            raise serializers.ValidationError('Нельзя подписаться на самого себя')
+            raise serializers.ValidationError(
+                'Нельзя подписаться на самого себя'
+            )
         return data
-
-
