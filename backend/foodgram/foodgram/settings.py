@@ -26,7 +26,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-rd69zx!hp2g=wsj)&yzbvaeg1ed0w+5*p!)eh6t^k8)*sskqs@'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
