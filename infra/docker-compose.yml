@@ -13,6 +13,7 @@ services:
       - 5432:5432
 
   backend:
+
     image: nikolaiborel/foodgram-backend:latest
     restart: always
     depends_on:
