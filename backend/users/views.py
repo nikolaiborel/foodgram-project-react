@@ -59,7 +59,7 @@ class SubscribeUser(APIView):
 def subscribtion(request):
     user = User.objects.filter(subscribed_by__user=request.user)
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 6
     page = paginator.paginate_queryset(user, request)
     serializer = FollowList(page, many=True, context={
         'current_user': request.user
